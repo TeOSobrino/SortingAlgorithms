@@ -14,13 +14,12 @@ int main(int argc, char **argv){
     srand(time(0));
 
     int arr_size = 0;
-    printf("Insira o número de elementos no vetor:\n");
+    printf("Insert the number of elements in array\n");
     scanf("%d", &arr_size);
     int *arr = malloc(arr_size*sizeof(int));
-    //int arr[arr_size];
 
     int limiter;
-    printf("Insira um limitante para os elementos, ou 0 para não limitar:\n");
+    printf("Insert the maximum value of array elements, or 0 to not limit:\n");
     scanf("%d", &limiter);
     if(limiter == 0) limiter = RAND_MAX;
     
@@ -28,11 +27,11 @@ int main(int argc, char **argv){
         arr[i] = rand()%limiter;
     }
 
-    printf("Insira a base (potência de 2) para realizar o radix sort:\n");
+    printf("Insert the base in which radix sort will be performed:\n");
     int base;
     scanf("%d", &base);
     if(base < 2) base = 256;
-    //else base = (int)floor(log2(pow(2, base))); //tornamos base a potência de 2 mais próxima.
+    else base = (int)(pow(2, ((int)log2(base)))); //Guarantee that base is a power of 2
 
     print_arr(arr, arr_size);
     radix_sort(arr, arr_size, base);
@@ -41,7 +40,7 @@ int main(int argc, char **argv){
         print_arr(arr, arr_size);
         printf("EXIT_SUCCESS\n");
     }
-    else printf("Erro de ordenação\n");
+    else printf("Error in sorting\n");
     
     return 0;
 }
@@ -59,27 +58,30 @@ int get_max_base_x(int *arr, int arr_size, int shift, int base){
     return max;
 }
 
+//a counting sort that limits itself by the shift.
 void counting_sort_base_x(int *arr, int arr_size, int shift, int base){
 
     int curr_max = get_max_base_x(arr, arr_size, shift, base);
 
-    int *count_arr = calloc(curr_max+1, sizeof(int)); //inicializa com 0.
+    int *count_arr = calloc(curr_max+1, sizeof(int));
     int *ordered_arr = calloc((arr_size), sizeof(int));
 
-    //a posição i tem o número de elementos = i;
+    //the ith position has the number of elements equal to i.
     for(int i = 0; i < arr_size; i++){
 
         int index = (arr[i]>>shift)%base;
         count_arr[index] += 1;
     }
 
-    //a posição i tem o número de elementos <= i;
+    //the ith position has the number of elements <= i;
     for(int i = 1; i <= curr_max; i++){
 
         count_arr[i] += count_arr[i-1];
     }
 
-    //para a estabilidade do counting (e corretude do radix) é necessário começar do fim.
+    //this loop must be performed carefully, in order to maintain sorting stability,
+    //in our case, we begin by the end of the counting array, but other conditions can
+    //be applied succesfully
     for(int i = arr_size-1; i >= 0; i--){ 
 
         int index = (arr[i]>>shift)%base;
@@ -99,18 +101,24 @@ void counting_sort_base_x(int *arr, int arr_size, int shift, int base){
 
 void radix_sort(int *arr, int arr_size, int base){
 
-    int max = get_max_base_x(arr, arr_size, 0, 0); //sem shift e base achamos o máximo global do vetor.
+    int max = get_max_base_x(arr, arr_size, 0, 0); //find the array's global maximum 
     int shift_increase = (int)floor(log2(base));
     
+    int shift = 0;
+    do{
+        //prints to better understand each procedure step:
 
-    for(int shift = 0; ; shift+= shift_increase){
-        printf("shift = %d\n", shift);
-        printf("n>>shitf = %d\n", max>>shift);
-        
+        //printf("shift = %d\n", shift);
+        //printf("max>>shitf = %d\n", max>>shift);
+
         counting_sort_base_x(arr, arr_size, shift, base);
-        
-        if(max>>shift < base) break; 
-    }
+        shift += shift_increase;
+    }while (max>>shift > base); //while the array maximum is less than the base, we
+    //need to keep repeating the counting sort procedure
+    
+    counting_sort_base_x(arr, arr_size, shift, base); //when the condition is met, we perform the
+    //final counting sort procedure, that sorts all the numbers that are lesser than the base, shifted
+    //by a certain amount (that depends on the global array maximum).
     
 }
 
@@ -123,16 +131,11 @@ void print_arr(int *arr, int size_arr){
     printf("\n");
 }
 
+//function to verify if the array is ordered
 char is_ordered(int *arr, int arr_size){
 
-    int x = arr[0];
-
-    for(int i = 1; i < arr_size; i++){
-
-        if(arr[i] < x) return 0;
+    for(int i = 1; i < arr_size; i++) 
+        if(arr[i] < arr[i-1]) return 0;
         
-        x = arr[i];
-    }
-
     return 1;
 }

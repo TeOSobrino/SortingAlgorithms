@@ -2,88 +2,96 @@
 #include<stdlib.h>
 #include<time.h>
 
-void quicksort(int *vetor, int ini, int fim);
-int particao(int *vetor, int ini, int fim);
-int escolhe_pivo(int *v, int ini, int fim);
+void quicksort(int *vetor, int beg, int end);
+int partition(int *vetor, int beg, int end);
+int choose_pivot(int *v, int beg, int end);
 void swap(int *a, int *b);
 void print_vetor(int *v, int tam);
 
 int main(int argc, char **argv){
-	int n = 1000000;
+
+	printf("Insert the number of elements in the array:\n");
+	int n;
+	scanf("%d", &n);
+
 	int *v = malloc(n*sizeof(int));
 	
 	srand(time(NULL));
-
 	for(int i = 0; i < n; i++){
 		v[i] = rand( )%(6*n);
 	}
 	
 	quicksort(v, 0, n);
-	
-	//print_vetor(v, n);
-
+	print_vetor(v, n);
 	free(v);
+
 	return 0;
 }
 
-int escolhe_pivo(int *v, int ini, int fim){
+//chooses pivot using 3-median
+int choose_pivot(int *v, int beg, int end){
 	
-	int pivo;
+	int pivot;
 
-	if( ini >= fim-1){
-		return v[ini];
+	if( beg >= end-1){
+		return v[beg];
 	}
 
-	int meio = ((fim + ini)/2);
+	int mid = ((end + beg)/2);
 
-	if(v[ini] < v[fim]){
+	if(v[beg] < v[end]){
 
-		if(v[meio] > v[fim]) pivo = fim;
-		else pivo = meio;
+		if(v[mid] > v[end]) pivot = end;
+		else pivot = mid;
 	}
 
 	else{
 
-		if(v[meio] > v[ini]) pivo = ini;
-		else pivo = meio; 
+		if(v[mid] > v[beg]) pivot = beg;
+		else pivot = mid; 
 	}
 	
-	return v[pivo];
+	swap((v+beg), (v+pivot));
+	return v[beg];
 }
 
-void quicksort(int *v, int ini, int fim){
+//partitions the array in two parts using the pivot as divisor
+//(smaller on the left, bigger on the right). Notice that, best
+//case scenario, this will wind up as a merge sort, without auxiliar memory.
+int partition(int *v, int beg, int end){
 	
-	//parada
-	if(ini >= fim) return;
+	int pivot = choose_pivot(v, beg, end);
 	
-	int pos_pivo = particao(v, ini, fim);
-	quicksort(v, ini, pos_pivo-1);
-	quicksort(v, pos_pivo+1, fim);
-}
-
-
-int particao(int *v, int ini, int fim){
-	
-	int pivo = escolhe_pivo(v, ini, fim);
-	
-	int i = ini+1;
-	int j = fim;
+	int i = beg+1;
+	int j = end;
 	
 	while(i <= j){
 
-		while(i<=fim && v[i] <= pivo){
+		while(i<=end && v[i] <= pivot){
 			i++;
 		}
 
-		while(j>=ini && v[j] > pivo){
+		while(j>=beg && v[j] > pivot){
 			j--;	
 		}
 
 		if(i < j) swap((v+i), (v+j));
 	}
 	
-	swap((v+ini), (v+j));		
+	swap((v+beg), (v+j));		
 	return j;
+}
+
+//quicksort will be partitioning the array, until the last partition occurs
+//when we obtain the sorted array.
+void quicksort(int *v, int beg, int end){
+	
+	//base condition
+	if(beg >= end) return;
+	
+	int pivot_position = partition(v, beg, end);
+	quicksort(v, beg, pivot_position-1);
+	quicksort(v, pivot_position+1, end);
 }
 
 void swap(int *a, int *b){
@@ -96,8 +104,8 @@ void swap(int *a, int *b){
 
 void print_vetor(int *v, int tam){
 	
-	for(int i = 0; i < tam; i++){
+	for(int i = 0; i < tam; i++)
 		printf("%d ", v[i]);
-	}
+	
 	printf("\n");
 }

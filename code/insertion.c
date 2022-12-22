@@ -1,34 +1,34 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define ARR_SIZE 100
 
-void print_array(int *vetor);
-void insertion_sort(int *vetor);
+void print_array(int *vetor, int n);
+void insertion_sort(int *vetor, int n);
 
 int main(int argc, char **argv){
 
+    int n = 1000;
     int vetor_para_ordenar[100];
-    for(int i = 0; i < ARR_SIZE; i++){
+    for(int i = 0; i < n; i++){
         vetor_para_ordenar[i] = i;
     }
-    print_array(vetor_para_ordenar);
-    insertion_sort(vetor_para_ordenar);
+    print_array(vetor_para_ordenar, n);
+    insertion_sort(vetor_para_ordenar, n);
     printf("\n");
-    print_array(vetor_para_ordenar);
+    print_array(vetor_para_ordenar, n);
 
     return 0;
 }
 
-void print_array(int *vetor){
-    for(int i = 0; i < ARR_SIZE; i++){
+void print_array(int *vetor, int n){
+    for(int i = 0; i < n; i++){
         printf("%d ", vetor[i]);
     }
     printf("\n");
 }
 
-void insertion_sort(int *vetor){
+void insertion_sort(int *vetor, int n){
 
-    for(int j = 1; j < ARR_SIZE; j++){
+    for(int j = 1; j < n; j++){
         int key = vetor[j];
         int i = j-1;
 

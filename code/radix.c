@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<time.h>
 
+//comments here are in portuguese, radix_any_base contians english comments.
+
 void print_array(int *v, int size_v);
 void counting_sort(int *v, int size_v, int maior, int exp);
 int *radix_sort(int *v, int size_v, int maior);
@@ -84,20 +86,6 @@ void counting_sort(int *v, int size_v, int maior, int exp){
         ordered_array[count_array[index]-1] = v[j];
         count_array[index] -= 1;
     }
-
-    //imprimir a cada iteração ordenado pelos últimos dígitos
-    // int order = 0;
-    // int juke = exp;
-    // while(juke > 0){
-    //     order++;
-    //     juke /= 10;
-    // }
-
-    
-    // printf("ordenado até o digito %d\n", order);
-
-    // print_array(ordered_array, size_v);
-    // printf("\n");
 
     free(count_array);
     for(int j = 0; j < size_v; j++){
