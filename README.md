@@ -1,5 +1,5 @@
 # SortingAlgorithms
-Some sorting algorithms that I have coded at my CS class.
+Some sorting algorithms that I have coded at my CS class, heavily based on CLRS.
 
-All individual codes are in the folder codes, the main, include and source folder are an ADT of sorting algorithms, that can be used in simple C projects
-for direct access to sorting algorithms.(further improvement could be implemented in quicksort usnig insertion sort when there are few elements left)
+Individual codes with some portuguese names and comments are in the main branch, all condensed algorithms are in the master branch, in english.
+Further improvement could be using insertion sort in mergesort, once there are 5-4 elements in the array, in order to reduce recursive calls
