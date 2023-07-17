@@ -1,5 +1,7 @@
 # SortingAlgorithms
-All the sorting algorithms here were coded using CLRS as reference. The most "original" is the radix sort that
-takes the base as input.
+All the sorting algorithms were coded using CLRS as reference.
 
-For clarification, "radix.c" refers to a base 10 radix sort, and the "radix_any_base.c" uses the nearest 2 power.
+Individual codes with some portuguese names and comments are in the main branch, all condensed algorithms are in the master branch, in english.
+Further improvement could be using insertion sort in mergesort, once there are 5-4 elements in the array, in order to reduce recursive calls
+
+"radix.c" uses base 10, "radix_any_base.c" uses the nearest power of 2.
